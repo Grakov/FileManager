@@ -110,7 +110,7 @@ public class FSObject {
         String file = s.substring(s.lastIndexOf(File.separatorChar));
         int index = file.lastIndexOf(".");
         if (index >= 0) {
-            return file.substring(index + 1);
+            return file.substring(index + 1).toLowerCase();
         } else {
             return "";
         }
