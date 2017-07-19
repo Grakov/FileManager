@@ -5,8 +5,6 @@ import com.u1337.filemanager.FileManager.FileManager;
 import com.u1337.filemanager.Main;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.*;
 import java.awt.*;
@@ -21,7 +19,7 @@ import java.util.*;
 import java.util.List;
 import java.util.Timer;
 
-public class MainWindow extends JFrame{
+public class MainWindow extends JFrame {
 
     private JFrame mFrame;
     private JTree mTree = new JTree();
@@ -51,12 +49,10 @@ public class MainWindow extends JFrame{
 
     private FileManager mFileManager = new FileManager();
 
-    public MainWindow()
-    {
+    public MainWindow() {
     }
 
-    public void init()
-    {
+    public void init() {
         // Window
 
         mFrame = new JFrame(Main.APP_NAME);
@@ -91,8 +87,6 @@ public class MainWindow extends JFrame{
         mTree.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-
-                System.out.println(e.toString());
 
                 if (e.getClickCount() == 2) {
 
@@ -131,8 +125,6 @@ public class MainWindow extends JFrame{
             @Override
             public void mouseClicked(MouseEvent e) {
 
-                System.out.println(e.toString());
-
                 int row = mTable.rowAtPoint(e.getPoint());
                 int col = mTable.columnAtPoint(e.getPoint());
 
@@ -145,15 +137,11 @@ public class MainWindow extends JFrame{
 
                     if (obj.isDirectory() && !obj.getDelayedStatus()) {
 
-                        FSObject objDir = obj;
-
                         DefaultMutableTreeNode tNode = findTreeNodeByObj(mTree,
-                                objDir);
+                                obj);
 
                         loadDirectory(obj, tNode);
-                    }
-                    else
-                    {
+                    } else {
                         try {
                             Desktop.getDesktop().open(obj.getFile());
                         } catch (IOException err) {
@@ -185,8 +173,7 @@ public class MainWindow extends JFrame{
             public void actionPerformed(ActionEvent actionEvent) {
                 String cmd = actionEvent.getActionCommand();
 
-                switch (cmd)
-                {
+                switch (cmd) {
                     case MainWindow.BUTTON_UP_ACTION: {
                         moveUP();
                         break;
@@ -216,7 +203,8 @@ public class MainWindow extends JFrame{
                         break;
                     }
 
-                    default: break;
+                    default:
+                        break;
                 }
             }
         });
@@ -225,15 +213,14 @@ public class MainWindow extends JFrame{
             button.setIcon(new ImageIcon(imageURL));
         } else {
             showMessage("Package is broken. Exit...");
-            System.out.println("Package broken, resource not found");
+            System.out.println("Package is broken, resource not found");
             System.exit(0);
         }
 
         return button;
     }
 
-    private void releaseDirectory(FSObject directory, DefaultMutableTreeNode node)
-    {
+    private void releaseDirectory(FSObject directory, DefaultMutableTreeNode node) {
         directory.setDelayedStatus(false);
 
         repaintTable(directory);
@@ -242,8 +229,7 @@ public class MainWindow extends JFrame{
             repaintTree(directory, node);
     }
 
-    public void loadDirectory(FSObject directory, DefaultMutableTreeNode node)
-    {
+    public void loadDirectory(FSObject directory, DefaultMutableTreeNode node) {
         if (directory != null) {
 
             directory.setDelayedStatus(true);
@@ -262,19 +248,15 @@ public class MainWindow extends JFrame{
         }
     }
 
-    public void showMessage(String s)
-    {
+    public void showMessage(String s) {
         JOptionPane.showMessageDialog(mFrame, s);
     }
 
-    private void repaintTable(FSObject obj)
-    {
+    private void repaintTable(FSObject obj) {
         Object[][] data = MainWindow.prepareData(obj.getChildren());
-        DefaultTableModel tModel = new DefaultTableModel(data, this.COLUMNS)
-        {
+        DefaultTableModel tModel = new DefaultTableModel(data, this.COLUMNS) {
             @Override
-            public boolean isCellEditable(int row, int column)
-            {
+            public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
@@ -284,8 +266,7 @@ public class MainWindow extends JFrame{
 
     }
 
-    private void repaintTree(FSObject parent, DefaultMutableTreeNode parentNode)
-    {
+    private void repaintTree(FSObject parent, DefaultMutableTreeNode parentNode) {
         boolean isLeaf = parentNode.isLeaf();
         TreePath tmPath = new TreePath(parentNode.getPath());
 
@@ -299,8 +280,7 @@ public class MainWindow extends JFrame{
         parentNode.removeAllChildren();
         tm.reload(parentNode);
 
-        for (FSObject o : parent.getChildren())
-        {
+        for (FSObject o : parent.getChildren()) {
             if (o.isDirectory()) {
                 DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(o);
                 tm.insertNodeInto(treeNode, parentNode, parentNode.getChildCount());
@@ -315,8 +295,7 @@ public class MainWindow extends JFrame{
 
     // Buttons
 
-    public void moveUP()
-    {
+    public void moveUP() {
         FSObject obj = mFileManager.getCurrent();
 
         if (obj == null || obj.isRoot()) {
@@ -329,8 +308,7 @@ public class MainWindow extends JFrame{
         loadDirectory(objF, findTreeNodeByObj(mTree, objF));
     }
 
-    public void makefile()
-    {
+    public void makefile() {
         FSObject obj = mFileManager.getCurrent();
 
         if (obj == null) {
@@ -340,25 +318,20 @@ public class MainWindow extends JFrame{
 
         String name = JOptionPane.showInputDialog(null, "Enter file name");
         name = name.trim();
-        if (name.equals(""))
-        {
+        if (name.equals("")) {
             showMessage("File name can't be empty");
             return;
         }
 
-        if (FileManager.makeFile(obj.getFile(), name))
-        {
+        if (FileManager.makeFile(obj.getFile(), name)) {
             mFileManager.loadAndActivate(obj);
             loadDirectory(obj, findTreeNodeByObj(mTree, obj));
-        }
-        else
-        {
+        } else {
             showMessage("Error: couldn't create file");
         }
     }
 
-    public void makedir()
-    {
+    public void makedir() {
         FSObject obj = mFileManager.getCurrent();
 
         if (obj == null) {
@@ -374,24 +347,18 @@ public class MainWindow extends JFrame{
             return;
         }
 
-        if (FileManager.makeDir(obj.getFile(), name))
-        {
+        if (FileManager.makeDir(obj.getFile(), name)) {
             mFileManager.loadAndActivate(obj);
             loadDirectory(obj, findTreeNodeByObj(mTree, obj));
-        }
-        else
-        {
+        } else {
             showMessage("Error: couldn't create directory");
         }
     }
 
-    public void delete()
-    {
+    public void delete() {
         List<FSObject> list = getSelection(mTable);
-        for (FSObject obj : list)
-        {
-            if (!mFileManager.delete(obj))
-            {
+        for (FSObject obj : list) {
+            if (!mFileManager.delete(obj)) {
                 showMessage("Error: couldn't delete file ".concat(obj.getName()));
             }
         }
@@ -401,33 +368,28 @@ public class MainWindow extends JFrame{
         loadDirectory(obj, findTreeNodeByObj(mTree, obj));
     }
 
-    public void copy()
-    {
+    public void copy() {
         List<FSObject> list = getSelection(mTable);
         mFileManager.setClipboard(list, FileManager.CLIPBOARD_COPY);
     }
 
-    public void remove()
-    {
+    public void remove() {
         List<FSObject> list = getSelection(mTable);
         mFileManager.setClipboard(list, FileManager.CLIPBOARD_MOVE);
     }
 
-    public void insert()
-    {
+    public void insert() {
         List<FSObject> list = mFileManager.getClipboard();
         int type = mFileManager.getClipboardType();
 
-        if (type == FileManager.CLIPBOARD_RESET)
-        {
+        if (type == FileManager.CLIPBOARD_RESET) {
             showMessage("Clipboard is empty");
             return;
         }
 
         for (FSObject obj : list) {
 
-            if (!mFileManager.insert(mFileManager.getCurrent(), obj, type))
-            {
+            if (!mFileManager.insert(mFileManager.getCurrent(), obj, type)) {
                 showMessage("Error: couldn't complete operation - ".concat(obj.getName()));
             }
 
@@ -442,33 +404,37 @@ public class MainWindow extends JFrame{
 
     // staff
 
-    public static Object[][] prepareData(List<FSObject> fs)
-    {
+    public static Object[][] prepareData(List<FSObject> fs) {
         Object[][] data = new Object[fs.size()][MainWindow.COLUMNS_NUM];
 
         int c = 0;
-        for (FSObject f : fs)
-        {
+        for (FSObject f : fs) {
             data[c][1] = f;
-            if (f.isFile())
-            {
-                data[c][0] = ResourcesManager.FILE_ICON;
+            if (f.isFile()) {
+                String extension = f.getExtension();
+                if (Arrays.asList(FileManager.DOCUMENT_FILES_EXTS).contains(extension))
+                    data[c][0] = ResourcesManager.FILE_DOCUMENT_ICON;
+                else if (Arrays.asList(FileManager.IMAGE_FILES_EXTS).contains(extension))
+                    data[c][0] = ResourcesManager.FILE_IMAGE_ICON;
+                else if (Arrays.asList(FileManager.MUSIC_FILES_EXTS).contains(extension))
+                    data[c][0] = ResourcesManager.FILE_MUSIC_ICON;
+                else if (Arrays.asList(FileManager.VIDEO_FILES_EXTS).contains(extension))
+                    data[c][0] = ResourcesManager.FILE_VIDEO_ICON;
+                else
+                    data[c][0] = ResourcesManager.FILE_ICON;
 
                 float filesize = f.getFile().length();
                 String suffix = "B";
 
-                if (filesize >= 1024)
-                {
+                if (filesize >= 1024) {
                     filesize /= 1024;
                     suffix = "KB";
 
-                    if (filesize >= 1024)
-                    {
+                    if (filesize >= 1024) {
                         filesize /= 1024;
                         suffix = "MB";
 
-                        if (filesize >= 1024)
-                        {
+                        if (filesize >= 1024) {
                             filesize /= 1024;
                             suffix = "GB";
                         }
@@ -477,9 +443,7 @@ public class MainWindow extends JFrame{
 
                 data[c][2] = String.format("%.1f", filesize).concat(" ").concat(suffix);
                 data[c][3] = stamp2date(f.getFile().lastModified());
-            }
-            else
-            {
+            } else {
                 if (f.isRoot())
                     data[c][0] = ResourcesManager.HARD_DRIVE_ICON;
                 else
@@ -492,18 +456,15 @@ public class MainWindow extends JFrame{
         return data;
     }
 
-    public static String stamp2date(long t)
-    {
+    public static String stamp2date(long t) {
         Date date = new Date(t);
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
         return sdf.format(date).toString();
     }
 
-    public List<FSObject> getSelection(JTable table)
-    {
+    public List<FSObject> getSelection(JTable table) {
         List<FSObject> res = new ArrayList<>();
-        for (int i : table.getSelectedRows())
-        {
+        for (int i : table.getSelectedRows()) {
             res.add((FSObject) table.getValueAt(i, 1));
         }
 
@@ -522,7 +483,7 @@ public class MainWindow extends JFrame{
 
         Enumeration<DefaultMutableTreeNode> childs = node.children();
 
-        for (DefaultMutableTreeNode childNode: Collections.list(childs)) {
+        for (DefaultMutableTreeNode childNode : Collections.list(childs)) {
             DefaultMutableTreeNode res = findTreeNodeByObjR(childNode, needle);
             if (res != null)
                 return res;
@@ -543,21 +504,23 @@ public class MainWindow extends JFrame{
                 fsvalue = (FSObject) userObject;
             }
 
-            if (fsvalue != null && fsvalue.getDelayedStatus()) {
-                setIcon(ResourcesManager.LOADING_ICON);
-            } else if (row == 0) {
-                setIcon(ResourcesManager.HARD_DRIVE_ICON);
-            } else {
-                if (leaf || !expanded) {
-                    setIcon(ResourcesManager.CLOSED_DIRECTORY_ICON);
+            if (fsvalue != null) {
+                if (fsvalue.getDelayedStatus()) {
+                    setIcon(ResourcesManager.LOADING_ICON);
+                } else if (fsvalue.isRoot()) {
+                    setIcon(ResourcesManager.HARD_DRIVE_ICON);
                 } else {
-                    setIcon(ResourcesManager.OPENED_DIRECTORY_ICON);
+                    if (leaf || !expanded) {
+                        setIcon(ResourcesManager.CLOSED_DIRECTORY_ICON);
+                    } else {
+                        setIcon(ResourcesManager.OPENED_DIRECTORY_ICON);
+                    }
                 }
+
             }
 
             return this;
         }
 
     }
-
 }

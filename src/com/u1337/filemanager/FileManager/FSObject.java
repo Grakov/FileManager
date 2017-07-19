@@ -39,7 +39,7 @@ public class FSObject {
     public String getName()
     {
         if (this.isRoot())
-            return this.getPath();
+            return getPath();
         else
             return mFile.getName();
     }
@@ -56,7 +56,7 @@ public class FSObject {
 
     @Override
     public String toString() {
-        return this.getName();
+        return getName();
     }
 
     public boolean isRoot()
@@ -66,12 +66,12 @@ public class FSObject {
 
     public boolean isFile()
     {
-        return this.getFile().isFile();
+        return getFile().isFile();
     }
 
     public boolean isDirectory()
     {
-        return this.getFile().isDirectory();
+        return getFile().isDirectory();
     }
 
     public List<FSObject> getChildren()
@@ -102,5 +102,17 @@ public class FSObject {
     public boolean getOpenedStatus()
     {
         return isOpened;
+    }
+
+    public String getExtension()
+    {
+        String s = getAbsolutePath();
+        String file = s.substring(s.lastIndexOf(File.separatorChar));
+        int index = file.lastIndexOf(".");
+        if (index >= 0) {
+            return file.substring(index + 1);
+        } else {
+            return "";
+        }
     }
 }

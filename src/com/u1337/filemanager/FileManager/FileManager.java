@@ -1,6 +1,5 @@
 package com.u1337.filemanager.FileManager;
 
-import javax.swing.tree.TreeNode;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -8,12 +7,15 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class FileManager {
 
     public List<FSObject> mRoots = new ArrayList<>();
-    public Map<FSObject, TreeNode> links;
+
+    public static final String[] IMAGE_FILES_EXTS = {"jpeg", "jpg", "png", "gif", "tiff", "svg"};
+    public static final String[] MUSIC_FILES_EXTS = {"mp3", "wma", "aac", "flac", "wav", "ogg"};
+    public static final String[] VIDEO_FILES_EXTS = {"mp4", "mpeg", "webm", "mkv", "avi", "wmv"};
+    public static final String[] DOCUMENT_FILES_EXTS = {"doc", "docx", "txt", "rtf", "html", "htm", "pdf"};
 
     private FSObject current;
     public FSObject mRootsObject;
